@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { getCategories } from '../services/api';
+import { getCategories, getProductsFromCategoryAndQuery } from '../services/api';
 
 class TelaPrincipal extends Component {
   constructor() {
     super();
     this.state = {
       searchInput: '',
+      displayResult: false,
+      searchResult: [],
       categoriesData: [],
     };
   }
@@ -27,16 +29,33 @@ class TelaPrincipal extends Component {
     }));
   };
 
+  searchItemsButton = async () => {
+    const { searchInput } = this.state;
+    const apiResponse = await getProductsFromCategoryAndQuery(searchInput);
+    this.setState({
+      searchResult: apiResponse.results,
+      displayResult: true,
+    });
+  };
+
   render() {
-    const { searchInput, categoriesData } = this.state;
+    const { searchInput, displayResult, searchResult, categoriesData } = this.state;
     return (
       <>
         <input
+          data-testid="query-input"
           name="searchInput"
           value={ searchInput }
           type="text"
           onChange={ this.onInputChange }
         />
+        <button
+          type="button"
+          data-testid="query-button"
+          onClick={ this.searchItemsButton }
+        >
+          Buscar
+        </button>
 
         { searchInput.length === 0
           ? (
@@ -49,6 +68,22 @@ class TelaPrincipal extends Component {
 
           : console.log('oi') }
 
+        { displayResult
+          ? (
+            searchResult
+              .map((item) => (
+                <div key={ item.id } data-testid="product">
+                  <p>{item.title}</p>
+                  <p>{item.price}</p>
+                  <img src={ item.thumbnail } alt={ item.title } />
+                </div>
+              ))
+
+          )
+          : (
+            <div>
+              <p>Nenhum produto foi encontrado</p>
+            </div>)}
         { categoriesData.map((categoria, index) => (
           <label data-testid="category" key={ index } htmlFor={ categoria.id }>
             { categoria.name }
