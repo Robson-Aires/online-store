@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { getProductsFromCategoryAndQuery } from '../services/api';
 import { Link } from 'react-router-dom';
-import { getCategories } from '../services/api';
+import { getCategories, getProductsFromCategoryAndQuery } from '../services/api';
 
 class TelaPrincipal extends Component {
   constructor() {
@@ -34,13 +33,13 @@ class TelaPrincipal extends Component {
     const { searchInput } = this.state;
     const apiResponse = await getProductsFromCategoryAndQuery(searchInput);
     this.setState({
-      searchResult: apiResponse,
+      searchResult: apiResponse.results,
       displayResult: true,
     });
   };
 
   render() {
-    const { searchInput, displayResult, searchResult } = this.state;
+    const { searchInput, displayResult, searchResult, categoriesData } = this.state;
     return (
       <>
         <input
