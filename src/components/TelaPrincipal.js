@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 class TelaPrincipal extends Component {
   constructor() {
@@ -36,6 +37,13 @@ class TelaPrincipal extends Component {
           )
 
           : console.log('oi') }
+
+        <Link
+          data-testid="shopping-cart-button"
+          to="/carrinhocompras"
+        >
+          Ir para Carrinho de Compras
+        </Link>
       </>
     );
   }
