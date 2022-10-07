@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { getProductsFromCategoryAndQuery } from '../services/api';
+import { Link } from 'react-router-dom';
+import { getCategories } from '../services/api';
 
 class TelaPrincipal extends Component {
   constructor() {
@@ -8,8 +10,18 @@ class TelaPrincipal extends Component {
       searchInput: '',
       displayResult: false,
       searchResult: [],
+      categoriesData: [],
     };
   }
+
+  componentDidMount() {
+    this.saveCategoriesInState();
+  }
+
+  saveCategoriesInState = async () => {
+    const categoriesReturn = await getCategories();
+    this.setState({ categoriesData: categoriesReturn });
+  };
 
   onInputChange = (event) => {
     const { name, value } = event.target;
@@ -73,6 +85,19 @@ class TelaPrincipal extends Component {
             <div>
               <p>Nenhum produto foi encontrado</p>
             </div>)}
+        { categoriesData.map((categoria, index) => (
+          <label data-testid="category" key={ index } htmlFor={ categoria.id }>
+            { categoria.name }
+            <input type="radio" name="" id={ categoria.id } />
+          </label>
+        )) }
+
+        <Link
+          data-testid="shopping-cart-button"
+          to="/carrinhocompras"
+        >
+          Ir para Carrinho de Compras
+        </Link>
       </>
     );
   }
