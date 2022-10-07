@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { getCategories } from '../services/api';
+import { Link } from 'react-router-dom';
+
 
 class TelaPrincipal extends Component {
   constructor() {
@@ -56,6 +58,12 @@ class TelaPrincipal extends Component {
         )) }
 
         {/* <button type="button"> hello </button> */}
+        <Link
+          data-testid="shopping-cart-button"
+          to="/carrinhocompras"
+        >
+          Ir para Carrinho de Compras
+        </Link>
       </>
     );
   }
