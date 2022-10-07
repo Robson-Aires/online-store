@@ -10,6 +10,7 @@ class TelaPrincipal extends Component {
       displayResult: false,
       searchResult: [],
       categoriesData: [],
+      categoriesProducts: [],
     };
   }
 
@@ -38,8 +39,15 @@ class TelaPrincipal extends Component {
     });
   };
 
+  showProductCategorie = async (event) => {
+    const { id } = event.target;
+    const apiResponse = await getProductsFromCategoryAndQuery(id);
+    this.setState({ categoriesProducts: apiResponse.results });
+  };
+
   render() {
-    const { searchInput, displayResult, searchResult, categoriesData } = this.state;
+    const { searchInput,
+      displayResult, searchResult, categoriesData, categoriesProducts } = this.state;
     return (
       <>
         <input
@@ -87,7 +95,12 @@ class TelaPrincipal extends Component {
         { categoriesData.map((categoria, index) => (
           <label data-testid="category" key={ index } htmlFor={ categoria.id }>
             { categoria.name }
-            <input type="radio" name="" id={ categoria.id } />
+            <input
+              type="radio"
+              name=""
+              id={ categoria.id }
+              onClick={ this.showProductCategorie }
+            />
           </label>
         )) }
 
@@ -97,6 +110,17 @@ class TelaPrincipal extends Component {
         >
           Ir para Carrinho de Compras
         </Link>
+
+        {
+          categoriesProducts
+            .map((item) => (
+              <div key={ item.id } data-testid="product">
+                <p>{item.title}</p>
+                <p>{item.price}</p>
+                <img src={ item.thumbnail } alt={ item.title } />
+              </div>
+            ))
+        }
       </>
     );
   }
