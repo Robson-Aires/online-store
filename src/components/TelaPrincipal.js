@@ -57,8 +57,11 @@ class TelaPrincipal extends Component {
 
   CartAdd = (event) => {
     const buttonEvent = event.target.parentNode.childNodes;
-    const arrayofObject = [buttonEvent[0]
-      .innerText, buttonEvent[1].innerText, buttonEvent[2].innerText];
+    const arrayofObject = {
+      name: buttonEvent[0].innerText,
+      price: buttonEvent[1].innerText,
+      img: buttonEvent[2].src,
+    };
     this.saveCartItems(arrayofObject);
   };
 
@@ -144,6 +147,14 @@ class TelaPrincipal extends Component {
                 <p>{item.title}</p>
                 <p>{item.price}</p>
                 <img src={ item.thumbnail } alt={ item.title } />
+                <button
+                  type="button"
+                  name={ item.id }
+                  onClick={ this.CartAdd }
+                  data-testid="product-add-to-cart"
+                >
+                  Adicionar ao carrinho
+                </button>
               </div>
             ))
         }
