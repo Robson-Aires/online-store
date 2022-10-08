@@ -118,6 +118,25 @@ class TelaPrincipal extends Component {
                 <p>{item.title}</p>
                 <p>{item.price}</p>
                 <img src={ item.thumbnail } alt={ item.title } />
+
+                {/* <Link
+                  to={ `/productdetails/${item.id}` }
+                  data-testid="product-detail-link"
+                  state={ { xablau: item } }
+                >
+                  <p>Ir para a página do produto</p>
+                </Link> */}
+
+                <Link
+                  to={ {
+                    pathname: `/productdetails/${item.id}`,
+                    state: { item },
+                  } }
+                  data-testid="product-detail-link"
+                >
+                  {' '}
+                  <p>Ir para a página do produto</p>
+                </Link>
               </div>
             ))
         }
