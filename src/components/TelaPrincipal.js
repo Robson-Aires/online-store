@@ -45,6 +45,23 @@ class TelaPrincipal extends Component {
     this.setState({ categoriesProducts: apiResponse.results });
   };
 
+  saveCartItems = (parameter) => {
+    if (!localStorage.getItem('cartItems')) {
+      localStorage.setItem('cartItems', JSON.stringify([]));
+    }
+    const storage = JSON.parse(localStorage.getItem('cartItems'));
+    const newstorage = [...storage, parameter];
+    localStorage.setItem('cartItems', JSON.stringify(newstorage));
+    return localStorage;
+  };
+
+  CartAdd = (event) => {
+    const buttonEvent = event.target.parentNode.childNodes;
+    const arrayofObject = [buttonEvent[0]
+      .innerText, buttonEvent[1].innerText, buttonEvent[2].innerText];
+    this.saveCartItems(arrayofObject);
+  };
+
   render() {
     const { searchInput,
       displayResult, searchResult, categoriesData, categoriesProducts } = this.state;
@@ -84,7 +101,16 @@ class TelaPrincipal extends Component {
                   <p>{item.title}</p>
                   <p>{item.price}</p>
                   <img src={ item.thumbnail } alt={ item.title } />
+                  <button
+                    type="button"
+                    name={ item.id }
+                    onClick={ this.CartAdd }
+                    data-testid="product-add-to-cart"
+                  >
+                    Adicionar ao carrinho
+                  </button>
                 </div>
+
               ))
 
           )
