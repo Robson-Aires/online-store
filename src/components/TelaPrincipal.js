@@ -50,17 +50,25 @@ class TelaPrincipal extends Component {
       localStorage.setItem('cartItems', JSON.stringify([]));
     }
     const storage = JSON.parse(localStorage.getItem('cartItems'));
-    const newstorage = [...storage, parameter];
-    localStorage.setItem('cartItems', JSON.stringify(newstorage));
-    return localStorage;
+    const isItemAlreadyInCart = storage
+      .find((item) => item.title === parameter.title);
+    if (isItemAlreadyInCart) {
+      const storageWithoutItem = storage.filter((item) => item.title !== parameter.title);
+      isItemAlreadyInCart.quantity += 1;
+      storageWithoutItem.push(isItemAlreadyInCart);
+      localStorage.setItem('cartItems', JSON.stringify(storageWithoutItem));
+    } else {
+      const newstorage = [...storage, parameter];
+      localStorage.setItem('cartItems', JSON.stringify(newstorage));
+    }
   };
 
-  CartAdd = (event) => {
-    const buttonEvent = event.target.parentNode.childNodes;
+  CartAdd = (item) => {
     const arrayofObject = {
-      name: buttonEvent[0].innerText,
-      price: buttonEvent[1].innerText,
-      img: buttonEvent[2].src,
+      price: item.price,
+      title: item.title,
+      img: item.thumbnail,
+      quantity: 1,
     };
     this.saveCartItems(arrayofObject);
   };
@@ -107,7 +115,7 @@ class TelaPrincipal extends Component {
                   <button
                     type="button"
                     name={ item.id }
-                    onClick={ this.CartAdd }
+                    onClick={ () => this.CartAdd(item) }
                     data-testid="product-add-to-cart"
                   >
                     Adicionar ao carrinho
@@ -150,7 +158,7 @@ class TelaPrincipal extends Component {
                 <button
                   type="button"
                   name={ item.id }
-                  onClick={ this.CartAdd }
+                  onClick={ () => this.CartAdd(item) }
                   data-testid="product-add-to-cart"
                 >
                   Adicionar ao carrinho

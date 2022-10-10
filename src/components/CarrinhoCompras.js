@@ -23,10 +23,10 @@ class CarrinhoCompras extends React.Component {
           </p>)
           : arr.map((produto, index) => (
             <div key={ index }>
-              <div data-testid="shopping-cart-product-quantity">{index}</div>
-              <div data-testid="shopping-cart-product-name">{produto.name}</div>
+              <div data-testid="shopping-cart-product-name">{produto.title}</div>
+              <div data-testid="shopping-cart-product-quantity">{produto.quantity}</div>
               <div>{produto.price}</div>
-              <img src={ produto.img } alt={ produto.name } />
+              <img src={ produto.img } alt={ produto.title } />
             </div>
           ))}
       </div>
