@@ -45,6 +45,34 @@ class TelaPrincipal extends Component {
     this.setState({ categoriesProducts: apiResponse.results });
   };
 
+  saveCartItems = (parameter) => {
+    if (!localStorage.getItem('cartItems')) {
+      localStorage.setItem('cartItems', JSON.stringify([]));
+    }
+    const storage = JSON.parse(localStorage.getItem('cartItems'));
+    const isItemAlreadyInCart = storage
+      .find((item) => item.title === parameter.title);
+    if (isItemAlreadyInCart) {
+      const storageWithoutItem = storage.filter((item) => item.title !== parameter.title);
+      isItemAlreadyInCart.quantity += 1;
+      storageWithoutItem.push(isItemAlreadyInCart);
+      localStorage.setItem('cartItems', JSON.stringify(storageWithoutItem));
+    } else {
+      const newstorage = [...storage, parameter];
+      localStorage.setItem('cartItems', JSON.stringify(newstorage));
+    }
+  };
+
+  CartAdd = (item) => {
+    const arrayofObject = {
+      price: item.price,
+      title: item.title,
+      img: item.thumbnail,
+      quantity: 1,
+    };
+    this.saveCartItems(arrayofObject);
+  };
+
   render() {
     const { searchInput,
       displayResult, searchResult, categoriesData, categoriesProducts } = this.state;
@@ -84,7 +112,16 @@ class TelaPrincipal extends Component {
                   <p>{item.title}</p>
                   <p>{item.price}</p>
                   <img src={ item.thumbnail } alt={ item.title } />
+                  <button
+                    type="button"
+                    name={ item.id }
+                    onClick={ () => this.CartAdd(item) }
+                    data-testid="product-add-to-cart"
+                  >
+                    Adicionar ao carrinho
+                  </button>
                 </div>
+
               ))
 
           )
@@ -118,6 +155,14 @@ class TelaPrincipal extends Component {
                 <p>{item.title}</p>
                 <p>{item.price}</p>
                 <img src={ item.thumbnail } alt={ item.title } />
+                <button
+                  type="button"
+                  name={ item.id }
+                  onClick={ () => this.CartAdd(item) }
+                  data-testid="product-add-to-cart"
+                >
+                  Adicionar ao carrinho
+                </button>
 
                 {/* <Link
                   to={ `/productdetails/${item.id}` }
