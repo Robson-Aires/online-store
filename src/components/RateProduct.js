@@ -44,12 +44,12 @@ class RateProduct extends React.Component {
 
     const { email, text, rating } = this.state;
 
-    const verifyInput = text.length > 0;
+    // const verifyInput = text.length > 0;
 
     const condition = /^\S+@\S+\.\S+$/;
     // regex extraído do tópico no link: https://stackoverflow.com/questions/46155/how-can-i-validate-an-email-address-in-javascript do Stackoverflow
 
-    if (!verifyInput || !email.match(condition)) {
+    if (!email.match(condition) || !rating) {
       this.setState({ isInvalid: true });
     } else {
       this.setState({ storedReview: saved,
@@ -84,7 +84,7 @@ class RateProduct extends React.Component {
               placeholder="Insira seu e-mail"
               value={ email }
               onChange={ this.onInputChange }
-              onClick={ () => { this.setState({ isInvalid: false }); } }
+              required
             />
           </div>
           <div>
@@ -96,11 +96,9 @@ class RateProduct extends React.Component {
               rows="5"
               value={ text }
               onChange={ this.onInputChange }
-              onClick={ () => { this.setState({ isInvalid: false }); } }
-
             />
           </div>
-          <div>
+          <div required>
             <label htmlFor="one">
               1
               <input
@@ -111,7 +109,6 @@ class RateProduct extends React.Component {
                 value="1"
                 checked={ rating === '1' }
                 onChange={ this.saveRadioValue }
-                onClick={ () => { this.setState({ isInvalid: false }); } }
 
               />
             </label>
@@ -125,7 +122,6 @@ class RateProduct extends React.Component {
                 onChange={ this.saveRadioValue }
                 checked={ rating === '2' }
                 value="2"
-                onClick={ () => { this.setState({ isInvalid: false }); } }
 
               />
             </label>
@@ -139,7 +135,6 @@ class RateProduct extends React.Component {
                 checked={ rating === '3' }
                 onChange={ this.saveRadioValue }
                 value="3"
-                onClick={ () => { this.setState({ isInvalid: false }); } }
 
               />
             </label>
@@ -153,7 +148,6 @@ class RateProduct extends React.Component {
                 checked={ rating === '4' }
                 onChange={ this.saveRadioValue }
                 value="4"
-                onClick={ () => { this.setState({ isInvalid: false }); } }
 
               />
             </label>
@@ -167,7 +161,6 @@ class RateProduct extends React.Component {
                 checked={ rating === '5' }
                 onChange={ this.saveRadioValue }
                 value="5"
-                onClick={ () => { this.setState({ isInvalid: false }); } }
 
               />
             </label>
