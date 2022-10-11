@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import RateProduct from './RateProduct';
 
 class ProductDetails extends React.Component {
   saveCartItems = (parameter) => {
@@ -11,10 +12,13 @@ class ProductDetails extends React.Component {
     const isItemAlreadyInCart = storage
       .find((item) => item.title === parameter.title);
     if (isItemAlreadyInCart) {
-      const storageWithoutItem = storage.filter((item) => item.title !== parameter.title);
-      isItemAlreadyInCart.quantity += 1;
-      storageWithoutItem.push(isItemAlreadyInCart);
-      localStorage.setItem('cartItems', JSON.stringify(storageWithoutItem));
+      const mappedData = storage.map((item) => {
+        if (item.title === parameter.title) {
+          return { ...item, quantity: item.quantity + 1 };
+        }
+        return item;
+      });
+      localStorage.setItem('cartItems', JSON.stringify(mappedData));
     } else {
       const newstorage = [...storage, parameter];
       localStorage.setItem('cartItems', JSON.stringify(newstorage));
@@ -23,20 +27,16 @@ class ProductDetails extends React.Component {
 
   CartAdd = (item) => {
     const arrayofObject = {
-      price: item.price,
-      title: item.title,
-      img: item.thumbnail,
-      quantity: 1,
+      price: item.price, title: item.title, img: item.thumbnail, quantity: 1,
     };
+
     this.saveCartItems(arrayofObject);
   };
 
   render() {
-    // const { item } = this.props.location.state;
     const { location: { state: { item } } } = this.props;
 
     return (
-
       <>
         <div key={ item.id }>
           <p data-testid="product-detail-name">{item.title}</p>
@@ -65,9 +65,10 @@ class ProductDetails extends React.Component {
             Ir para a página do carrinho de compras
           </button>
         </Link>
-
+        <RateProduct
+          id={ item.id }
+        />
       </>
-
     );
   }
 }
@@ -75,7 +76,14 @@ class ProductDetails extends React.Component {
 ProductDetails.propTypes = {
   location: PropTypes.shape({
     state: PropTypes.shape({
-      item: PropTypes.objectOf,
+      item: PropTypes.shape({
+        price: PropTypes.number,
+        title: PropTypes.string,
+        img: PropTypes.string,
+        quantity: PropTypes.number,
+        thumbnail: PropTypes.string,
+        id: PropTypes.string,
+      }),
     }),
   }).isRequired,
 };

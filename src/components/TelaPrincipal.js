@@ -53,10 +53,13 @@ class TelaPrincipal extends Component {
     const isItemAlreadyInCart = storage
       .find((item) => item.title === parameter.title);
     if (isItemAlreadyInCart) {
-      const storageWithoutItem = storage.filter((item) => item.title !== parameter.title);
-      isItemAlreadyInCart.quantity += 1;
-      storageWithoutItem.push(isItemAlreadyInCart);
-      localStorage.setItem('cartItems', JSON.stringify(storageWithoutItem));
+      const mappedData = storage.map((item) => {
+        if (item.title === parameter.title) {
+          return { ...item, quantity: item.quantity + 1 };
+        }
+        return item;
+      });
+      localStorage.setItem('cartItems', JSON.stringify(mappedData));
     } else {
       const newstorage = [...storage, parameter];
       localStorage.setItem('cartItems', JSON.stringify(newstorage));
@@ -94,15 +97,13 @@ class TelaPrincipal extends Component {
         </button>
 
         { searchInput.length === 0
-          ? (
+          && (
             <div
               data-testid="home-initial-message"
             >
               Digite algum termo de pesquisa ou escolha uma categoria.
             </div>
-          )
-
-          : console.log('oi') }
+          )}
 
         { displayResult
           ? (
