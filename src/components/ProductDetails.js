@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import RateProduct from './RateProduct';
 
 class ProductDetails extends React.Component {
   saveCartItems = (parameter) => {
@@ -64,6 +65,9 @@ class ProductDetails extends React.Component {
             Ir para a página do carrinho de compras
           </button>
         </Link>
+        <RateProduct
+          id={ item.id }
+        />
       </>
     );
   }
