@@ -97,15 +97,8 @@ class CarrinhoCompras extends React.Component {
               <img src={ produto.img } alt={ produto.title } />
             </div>
           ))}
-        <Link
-          to={ {
-            pathname: '/checkout',
-          } }
-        >
-          <button
-            type="button"
-            data-testid="checkout-products"
-          >
+        <Link to={ { pathname: '/checkout' } }>
+          <button type="button" data-testid="checkout-products">
             Ir para a página de checkout
           </button>
         </Link>

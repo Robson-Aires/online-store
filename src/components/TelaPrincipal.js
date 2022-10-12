@@ -11,12 +11,27 @@ class TelaPrincipal extends Component {
       searchResult: [],
       categoriesData: [],
       categoriesProducts: [],
+      cartQuantity: 0,
     };
   }
 
   componentDidMount() {
     this.saveCategoriesInState();
+    this.updateCartQuantity();
   }
+
+  updateCartQuantity = () => {
+    if (!localStorage.getItem('cartItems')) {
+      localStorage.setItem('cartItems', JSON.stringify([]));
+    }
+    if (!localStorage.getItem('cartSize')) {
+      localStorage.setItem('cartSize', 0);
+    }
+    const products = JSON.parse(localStorage.getItem('cartItems'));
+    const cartQuantity = products.reduce((res, product) => res + product.quantity, 0);
+    this.setState({ cartQuantity });
+    localStorage.setItem('cartSize', cartQuantity);
+  };
 
   saveCategoriesInState = async () => {
     const categoriesReturn = await getCategories();
@@ -74,11 +89,14 @@ class TelaPrincipal extends Component {
       quantity: 1,
     };
     this.saveCartItems(arrayofObject);
+    this.updateCartQuantity();
   };
 
   render() {
-    const { searchInput,
-      displayResult, searchResult, categoriesData, categoriesProducts } = this.state;
+    const {
+      searchInput, displayResult, searchResult,
+      categoriesData, categoriesProducts, cartQuantity,
+    } = this.state;
     return (
       <>
         <input
@@ -98,9 +116,7 @@ class TelaPrincipal extends Component {
 
         { searchInput.length === 0
           && (
-            <div
-              data-testid="home-initial-message"
-            >
+            <div data-testid="home-initial-message">
               Digite algum termo de pesquisa ou escolha uma categoria.
             </div>
           )}
@@ -142,11 +158,11 @@ class TelaPrincipal extends Component {
           </label>
         )) }
 
-        <Link
-          data-testid="shopping-cart-button"
-          to="/carrinhocompras"
-        >
+        <Link data-testid="shopping-cart-button" to="/carrinhocompras">
           Ir para Carrinho de Compras
+          <p data-testid="shopping-cart-size">
+            {cartQuantity}
+          </p>
         </Link>
 
         {
@@ -165,23 +181,11 @@ class TelaPrincipal extends Component {
                   Adicionar ao carrinho
                 </button>
 
-                {/* <Link
-                  to={ `/productdetails/${item.id}` }
-                  data-testid="product-detail-link"
-                  state={ { xablau: item } }
-                >
-                  <p>Ir para a página do produto</p>
-                </Link> */}
-
                 <Link
-                  to={ {
-                    pathname: `/productdetails/${item.id}`,
-                    state: { item },
-                  } }
+                  to={ { pathname: `/productdetails/${item.id}`, state: { item } } }
                   data-testid="product-detail-link"
                 >
-                  {' '}
-                  <p>Ir para a página do produto</p>
+                  Ir para a página do produto
                 </Link>
               </div>
             ))
