@@ -24,7 +24,7 @@ class CarrinhoCompras extends React.Component {
     const { name } = target;
     const data = this.recoveryProducts();
     const increaseData = data.map((item) => {
-      if (item.title === name) {
+      if (item.title === name && item.quantity + 1 <= item.stockQuantity) {
         return { ...item, quantity: item.quantity + 1 };
       }
       return item;

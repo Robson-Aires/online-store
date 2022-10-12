@@ -55,6 +55,7 @@ class ProductDetails extends React.Component {
       title: item.title,
       img: item.thumbnail,
       quantity: 1,
+      stockQuantity: item.available_quantity,
     };
 
     this.saveCartItems(arrayofObject);

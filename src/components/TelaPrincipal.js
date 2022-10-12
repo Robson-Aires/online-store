@@ -87,6 +87,7 @@ class TelaPrincipal extends Component {
       title: item.title,
       img: item.thumbnail,
       quantity: 1,
+      stockQuantity: item.available_quantity,
     };
     this.saveCartItems(arrayofObject);
     this.updateCartQuantity();
