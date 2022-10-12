@@ -56,8 +56,8 @@ class ProductDetails extends React.Component {
       img: item.thumbnail,
       quantity: 1,
       stockQuantity: item.available_quantity,
+      shipping: item.shipping.free_shipping,
     };
-
     this.saveCartItems(arrayofObject);
   };
 
@@ -75,6 +75,11 @@ class ProductDetails extends React.Component {
             alt={ item.title }
             data-testid="product-detail-image"
           />
+          {/* {item.shipping.free_shipping && (
+            <p data-testid="free-shipping">
+              Frete Grátis
+            </p>
+          )} */}
           <button
             type="button"
             name={ item.id }
@@ -106,6 +111,7 @@ ProductDetails.propTypes = {
         quantity: PropTypes.number,
         thumbnail: PropTypes.string,
         id: PropTypes.string,
+        // shipping: PropTypes.bool,
       }),
     }),
   }).isRequired,

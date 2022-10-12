@@ -88,7 +88,9 @@ class TelaPrincipal extends Component {
       img: item.thumbnail,
       quantity: 1,
       stockQuantity: item.available_quantity,
+      shipping: item.shipping.free_shipping,
     };
+    console.log(item);
     this.saveCartItems(arrayofObject);
     this.updateCartQuantity();
   };
@@ -130,6 +132,11 @@ class TelaPrincipal extends Component {
                   <p>{item.title}</p>
                   <p>{item.price}</p>
                   <img src={ item.thumbnail } alt={ item.title } />
+                  {item.shipping.free_shipping && (
+                    <p data-testid="free-shipping">
+                      Frete Grátis
+                    </p>
+                  )}
                   <button
                     type="button"
                     name={ item.id }
@@ -173,6 +180,11 @@ class TelaPrincipal extends Component {
                 <p>{item.title}</p>
                 <p>{item.price}</p>
                 <img src={ item.thumbnail } alt={ item.title } />
+                {item.shipping.free_shipping && (
+                  <p data-testid="free-shipping">
+                    Frete Grátis
+                  </p>
+                )}
                 <button
                   type="button"
                   name={ item.id }
