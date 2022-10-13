@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 class CarrinhoCompras extends React.Component {
   constructor(props) {
@@ -23,7 +24,7 @@ class CarrinhoCompras extends React.Component {
     const { name } = target;
     const data = this.recoveryProducts();
     const increaseData = data.map((item) => {
-      if (item.title === name) {
+      if (item.title === name && item.quantity + 1 <= item.stockQuantity) {
         return { ...item, quantity: item.quantity + 1 };
       }
       return item;
@@ -96,6 +97,11 @@ class CarrinhoCompras extends React.Component {
               <img src={ produto.img } alt={ produto.title } />
             </div>
           ))}
+        <Link to={ { pathname: '/checkout' } }>
+          <button type="button" data-testid="checkout-products">
+            Ir para a página de checkout
+          </button>
+        </Link>
       </div>
     );
   }

@@ -4,13 +4,36 @@ import { Link } from 'react-router-dom';
 import RateProduct from './RateProduct';
 
 class ProductDetails extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      cartQuantity: 0,
+    };
+  }
+
+  componentDidMount() {
+    this.updateCartQuantity();
+  }
+
+  updateCartQuantity = () => {
+    if (!localStorage.getItem('cartItems')) {
+      localStorage.setItem('cartItems', JSON.stringify([]));
+    }
+    if (!localStorage.getItem('cartSize')) {
+      localStorage.setItem('cartSize', 0);
+    }
+    const products = JSON.parse(localStorage.getItem('cartItems'));
+    const cartQuantity = products.reduce((res, product) => res + product.quantity, 0);
+    this.setState({ cartQuantity });
+    localStorage.setItem('cartSize', cartQuantity);
+  };
+
   saveCartItems = (parameter) => {
     if (!localStorage.getItem('cartItems')) {
       localStorage.setItem('cartItems', JSON.stringify([]));
     }
     const storage = JSON.parse(localStorage.getItem('cartItems'));
-    const isItemAlreadyInCart = storage
-      .find((item) => item.title === parameter.title);
+    const isItemAlreadyInCart = storage.find((item) => item.title === parameter.title);
     if (isItemAlreadyInCart) {
       const mappedData = storage.map((item) => {
         if (item.title === parameter.title) {
@@ -23,18 +46,24 @@ class ProductDetails extends React.Component {
       const newstorage = [...storage, parameter];
       localStorage.setItem('cartItems', JSON.stringify(newstorage));
     }
+    this.updateCartQuantity();
   };
 
   CartAdd = (item) => {
     const arrayofObject = {
-      price: item.price, title: item.title, img: item.thumbnail, quantity: 1,
+      price: item.price,
+      title: item.title,
+      img: item.thumbnail,
+      quantity: 1,
+      stockQuantity: item.available_quantity,
+      shipping: item.shipping.free_shipping,
     };
-
     this.saveCartItems(arrayofObject);
   };
 
   render() {
     const { location: { state: { item } } } = this.props;
+    const { cartQuantity } = this.state;
 
     return (
       <>
@@ -46,6 +75,11 @@ class ProductDetails extends React.Component {
             alt={ item.title }
             data-testid="product-detail-image"
           />
+          {/* {item.shipping.free_shipping && (
+            <p data-testid="free-shipping">
+              Frete Grátis
+            </p>
+          )} */}
           <button
             type="button"
             name={ item.id }
@@ -55,19 +89,13 @@ class ProductDetails extends React.Component {
             Adicionar ao carrinho
           </button>
         </div>
-        <Link
-          to="/carrinhocompras"
-        >
-          <button
-            type="button"
-            data-testid="shopping-cart-button"
-          >
-            Ir para a página do carrinho de compras
-          </button>
+        <Link to="/carrinhocompras" data-testid="shopping-cart-button">
+          Ir para a página do carrinho de compras
+          <p data-testid="shopping-cart-size">
+            {cartQuantity}
+          </p>
         </Link>
-        <RateProduct
-          id={ item.id }
-        />
+        <RateProduct id={ item.id } />
       </>
     );
   }
@@ -83,6 +111,7 @@ ProductDetails.propTypes = {
         quantity: PropTypes.number,
         thumbnail: PropTypes.string,
         id: PropTypes.string,
+        // shipping: PropTypes.bool,
       }),
     }),
   }).isRequired,
